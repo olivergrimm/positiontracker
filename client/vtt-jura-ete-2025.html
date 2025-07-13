@@ -50,7 +50,11 @@ const swisstopo = L.tileLayer(
     // Lade die GPX-Datei als Layer
     new L.GPX('https://gpx-tracker-production.up.railway.app/track.gpx', {
       async: true,
-    })
+      polyline_options: {
+              color: 'red',      // Farbe
+              weight: 4,         // Linienstärke
+              opacity: 0.75,     // Deckkraft
+    }
       .on('loaded', function (e) {
         map.fitBounds(e.target.getBounds());
       })
