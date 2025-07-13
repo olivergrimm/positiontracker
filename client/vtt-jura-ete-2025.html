@@ -54,7 +54,8 @@ const swisstopo = L.tileLayer(
               color: 'red',      // Farbe
               weight: 4,         // Linienstärke
               opacity: 0.75,     // Deckkraft
-    }
+      }
+    })
       .on('loaded', function (e) {
         map.fitBounds(e.target.getBounds());
       })
