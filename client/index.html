@@ -12,7 +12,7 @@
 <body>
   <h1>Aktuelle Position</h1>
   <div id="position">Position wird bestimmt...</div>
-
+  <div id="updatezeit"></div>
   <script>
     function updatePosition() {
       if (navigator.geolocation) {
@@ -20,7 +20,13 @@
           (position) => {
             const lat = position.coords.latitude.toFixed(6);
             const lon = position.coords.longitude.toFixed(6);
+            var currentdate = new Date();
+            var datetime = "Last Sync: " + currentdate.getDay() + "/" + currentdate.getMonth() 
+            + "/" + currentdate.getFullYear() + " @ " 
+            + currentdate.getHours() + ":" 
+            + currentdate.getMinutes() + ":" + currentdate.getSeconds();
             document.getElementById("position").innerText = `Breite: ${lat}, Länge: ${lon}`;
+            document.getElementById("updatezeit").innerText = datetime;
             console.log(`Position aktualisiert: ${lat}, ${lon}`);
           },
           (error) => {
