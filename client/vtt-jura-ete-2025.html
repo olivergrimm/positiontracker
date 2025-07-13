@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet KML Beispiel</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/2.1.2/gpx.min.js" defer></script>
+<script>
+  const map = L.map('map').setView([47.3769, 8.5417], 10); // Beispiel: Zürich
+
+const swisstopo = L.tileLayer(
+      "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
+      {
+        attribution:
+          '© <a href="https://www.swisstopo.admin.ch/">swisstopo</a>',
+        maxZoom: 18,
+        tileSize: 256,
+      }
+    );
+
+    swisstopo.addTo(map);
+
+  const kml1 = omnivore.kml('genf-lepont.kml').addTo(map);
+  const kml2 = omnivore.kml('lepont-saignelegier.kml').addTo(map);
+  const kml3 = omnivore.kml('saignelegier-rombach.kml').addTo(map);
+  const kml4 = omnivore.kml('etappenorte.kml').addTo(map);
+
+  const group = L.featureGroup([kml1,kml2,kml3]);
+  kml3.on('ready', () => {
+    map.fitBounds(group.getBounds());
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+
+    //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //  attribution: '&copy; OpenStreetMap contributors',
+    //}).addTo(map);
+
+    // Lade die GPX-Datei als Layer
+    new L.GPX('https://gpx-tracker-production.up.railway.app/track.gpx', {
+      async: true,
+    })
+      .on('loaded', function (e) {
+        map.fitBounds(e.target.getBounds());
+      })
+      .addTo(map);
+  });
+</script>
+
+</body>
+</html>
