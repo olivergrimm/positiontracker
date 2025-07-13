@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standort Tracker</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; }
+    #position { margin-top: 1em; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>Aktuelle Position</h1>
+  <div id="position">Position wird bestimmt...</div>
+
+  <script>
+    function updatePosition() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude.toFixed(6);
+            const lon = position.coords.longitude.toFixed(6);
+            document.getElementById("position").innerText = `Breite: ${lat}, Länge: ${lon}`;
+            console.log(`Position aktualisiert: ${lat}, ${lon}`);
+          },
+          (error) => {
+            document.getElementById("position").innerText = "Fehler bei der Standortbestimmung.";
+            console.error(error);
+          }
+        );
+      } else {
+        document.getElementById("position").innerText = "Geolocation wird nicht unterstützt.";
+      }
+    }
+
+    // Initial aufrufen
+    updatePosition();
+
+    // Alle 2 Minuten (120.000 Millisekunden) aktualisieren
+    setInterval(updatePosition, 120000);
+  </script>
+</body>
+</html>
