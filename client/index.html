@@ -1,49 +1,73 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Standort Tracker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Standort-Tracker</title>
   <style>
     body { font-family: sans-serif; padding: 2em; }
-    #position { margin-top: 1em; font-size: 1.2em; }
+    #status, #timestamp { margin-top: 1em; }
   </style>
 </head>
 <body>
-  <h1>Aktuelle Position</h1>
-  <div id="position">Position wird bestimmt...</div>
-  <div id="updatezeit"></div>
+  <h1>Live Standort-Tracker</h1>
+
+  <div id="status">Starte Standortbestimmung...</div>
+  <div id="timestamp">Letzte Aktualisierung: –</div>
+
   <script>
-    function updatePosition() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude.toFixed(6);
-            const lon = position.coords.longitude.toFixed(6);
-            var currentdate = new Date();
-            var datetime = "Last Sync: " + currentdate.getDay() + "/" + currentdate.getMonth() 
-            + "/" + currentdate.getFullYear() + " @ " 
-            + currentdate.getHours() + ":" 
-            + currentdate.getMinutes() + ":" + currentdate.getSeconds();
-            document.getElementById("position").innerText = `Breite: ${lat}, Länge: ${lon}`;
-            document.getElementById("updatezeit").innerText = datetime;
-            console.log(`Position aktualisiert: ${lat}, ${lon}`);
-          },
-          (error) => {
-            document.getElementById("position").innerText = "Fehler bei der Standortbestimmung.";
-            console.error(error);
-          }
-        );
-      } else {
-        document.getElementById("position").innerText = "Geolocation wird nicht unterstützt.";
-      }
+    const API_URL = "https://gpx-tracker-production.up.railway.app/position";
+    const statusEl = document.getElementById("status");
+    const timestampEl = document.getElementById("timestamp");
+
+    function formatTime(date) {
+      return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }
 
-    // Initial aufrufen
+    function updatePosition() {
+      if (!navigator.geolocation) {
+        statusEl.textContent = "Geolocation wird nicht unterstützt.";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          statusEl.textContent = `Aktuelle Position: ${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+
+          // ✅ Senden an Backend
+          fetch(API_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ latitude: lat, longitude: lon })
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Gespeichert:", data);
+            const now = new Date();
+            timestampEl.textContent = "Letzte Aktualisierung: " + formatTime(now);
+          })
+          .catch(err => {
+            console.error("Fehler beim Senden:", err);
+            statusEl.textContent = "Fehler beim Senden der Position.";
+          });
+        },
+        (error) => {
+          console.error(error);
+          statusEl.textContent = "Fehler bei der Standortbestimmung.";
+        }
+      );
+    }
+
+    // Initial starten
     updatePosition();
 
-    // Alle 2 Minuten (120.000 Millisekunden) aktualisieren
-    setInterval(updatePosition, 10000);
+    // ⏱️ Alle 2 Minuten (120000 ms) wiederholen
+    setInterval(updatePosition, 20000);
   </script>
 </body>
 </html>
