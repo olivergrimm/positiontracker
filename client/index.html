@@ -32,7 +32,7 @@
 
 
 <script>
-  const map = L.map('map').setView([47.3769, 8.5417], 10); // Beispiel: Zürich
+  const map = L.map('map').setView([47.3769, 8.5417], 10); 
 
   const swisstopo = L.tileLayer(
     "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
@@ -48,7 +48,7 @@
   const kml1 = omnivore.kml('../assets/genf-lepont.kml').addTo(map);
   const kml2 = omnivore.kml('../assets/lepont-saignelegier.kml').addTo(map);
   const kml3 = omnivore.kml('../assets/saignelegier-rombach.kml').addTo(map);
-  const kml4 = omnivore.kml('../assets/etappenorte.kml').addTo(map);
+  //const kml4 = omnivore.kml('../assets/etappenorte.kml').addTo(map);
 
   const group = L.featureGroup([kml1, kml2, kml3]);
   kml3.on('ready', () => {
@@ -62,7 +62,7 @@
       async: true,
       polyline_options: {
         color: 'red',
-        weight: 4,
+        weight: 5,
         opacity: 0.75,
       }
     })
@@ -86,22 +86,21 @@
           const timeEl = pt.getElementsByTagName("time")[0];
           const time = timeEl ? new Date(timeEl.textContent).toLocaleTimeString()  : "Keine Zeit";
 
-        L.circleMarker([lat, lon], {
-          radius: 50,
-          color: 'red',
-          fillColor: 'red',
-          fillOpacity: 1
-        }).addTo(map);
+          L.circleMarker([lat, lon], {
+            radius: 50,
+            color: 'red',
+            fillColor: 'red',
+            fillOpacity: 1
+          }).addTo(map);
 
-        // Zeit-Label separat
-        L.marker([lat, lon], {
-          icon: L.divIcon({
-            className: 'gpx-label',
-            html: `<div class="gpx-label-text">${time}</div>`,
-            iconSize: [60, 20],
-            iconAnchor: [30, 10]
-          })
-        }).addTo(map);
+          L.marker([lat, lon], {
+            icon: L.divIcon({
+              className: 'gpx-label',
+              html: `<div class="gpx-label-text">${time}</div>`,
+              iconSize: [60, 20],
+              iconAnchor: [30, 10]
+            })
+          }).addTo(map);
 
         }
       });
