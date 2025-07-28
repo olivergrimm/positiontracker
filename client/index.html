@@ -1,34 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>vtt-jura-ete-2025</title>
+  <title>VTTTJ25</title>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    #map { height: 100vh; }
+    #map { height: 100vh; 
+      z-index: 5; 
+    }
 
-  .gpx-label {
-    font-size: 10px;
-    color: black;
-    background-color: white;
-    padding: 2px 4px;
-    border-radius: 4px;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-    white-space: nowrap;
-    pointer-events: none;
-  }
-</style>
+    .gpx-label {
+      font-size: 10px;
+      color: black;
+      background-color: white;
+      padding: 2px 4px;
+      border-radius: 4px;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+      white-space: nowrap;
+      pointer-events: none;
+    }
 
+    #flickr-overlay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.8); /* optional halbtransparent */
+      padding: 10px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
 
 <div id="map"></div>
+<div id="flickr-overlay">
+<a data-flickr-embed="true" data-header="true" data-footer="true" href="https://www.flickr.com/photos/162451885@N07/54684582100/in/album-72177720327904359" title="Vallee-de-Joux"><img src="https://live.staticflickr.com/65535/54684582100_00bc15ae34_n.jpg" width="240" height="320" alt="Vallee-de-Joux"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/2.1.2/gpx.min.js" defer></script>
-
+<script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
 
 
 <script>
@@ -129,7 +142,6 @@
       });
   });
 </script>
-
 
 </body>
 </html>
