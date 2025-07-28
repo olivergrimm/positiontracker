@@ -19,6 +19,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/2.1.2/gpx.min.js" defer></script>
 
 <script>
+
+    setTimeout(() => {
+      location.reload();
+    }, 5 * 60 * 1000);
+
     const API_URL = "https://gpx-tracker-production.up.railway.app/position";
     const statusEl = document.getElementById("status");
     const timestampEl = document.getElementById("timestamp");
