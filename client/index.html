@@ -59,7 +59,7 @@
       .addTo(map);
 
     // Zusätzlich: Zeitpunkte aus GPX extrahieren und als Label anzeigen
-    fetch('track.gpx')
+    fetch('https://gpx-tracker-production.up.railway.app/track.gpx')
       .then(response => response.text())
       .then(gpxText => {
         const parser = new DOMParser();
@@ -76,7 +76,7 @@
           const label = L.marker([lat, lon], {
             icon: L.divIcon({
               className: 'gpx-label',
-              html: `<div style="font-size:10px; color:#000;">${time}</div>`,
+              html: `<div style="font-size:15px; color:#000;">${time}</div>`,
               iconSize: [60, 20],
               iconAnchor: [30, 10],
             })
