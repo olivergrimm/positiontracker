@@ -84,7 +84,7 @@
           const lat = parseFloat(pt.getAttribute("lat"));
           const lon = parseFloat(pt.getAttribute("lon"));
           const timeEl = pt.getElementsByTagName("time")[0];
-          const time = timeEl ? new Date(timeE1.textContent).toLocaleTimeString()  : "Keine Zeit";
+          const time = timeEl ? new Date(timeEl.textContent).toLocaleTimeString()  : "Keine Zeit";
 
         L.circleMarker([lat, lon], {
           radius: 4,
