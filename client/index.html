@@ -18,53 +18,76 @@
 
 
 
-
 <script>
   const map = L.map('map').setView([47.3769, 8.5417], 10); // Beispiel: Zürich
-  const swisstopo = L.tileLayer(
-        "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
-        {
-          attribution:
-            '© <a href="https://www.swisstopo.admin.ch/">swisstopo</a>',
-          maxZoom: 18,
-          tileSize: 256,
-        }
-      );
 
-    swisstopo.addTo(map);
+  const swisstopo = L.tileLayer(
+    "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg",
+    {
+      attribution: '© <a href="https://www.swisstopo.admin.ch/">swisstopo</a>',
+      maxZoom: 18,
+      tileSize: 256,
+    }
+  );
+
+  swisstopo.addTo(map);
 
   const kml1 = omnivore.kml('../assets/genf-lepont.kml').addTo(map);
   const kml2 = omnivore.kml('../assets/lepont-saignelegier.kml').addTo(map);
   const kml3 = omnivore.kml('../assets/saignelegier-rombach.kml').addTo(map);
   const kml4 = omnivore.kml('../assets/etappenorte.kml').addTo(map);
 
-  const group = L.featureGroup([kml1,kml2,kml3]);
+  const group = L.featureGroup([kml1, kml2, kml3]);
   kml3.on('ready', () => {
     map.fitBounds(group.getBounds());
   });
 
   document.addEventListener('DOMContentLoaded', function () {
 
-
-    //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //  attribution: '&copy; OpenStreetMap contributors',
-    //}).addTo(map);
-
-    // Lade die GPX-Datei als Layer
-    new L.GPX('https://gpx-tracker-production.up.railway.app/track.gpx', {
+    // GPX-Track laden und anzeigen
+    const gpxTrack = new L.GPX('https://gpx-tracker-production.up.railway.app/track.gpx', {
       async: true,
       polyline_options: {
-              color: 'red',      // Farbe
-              weight: 4,         // Linienstärke
-              opacity: 0.75,     // Deckkraft
+        color: 'red',
+        weight: 4,
+        opacity: 0.75,
       }
     })
       .on('loaded', function (e) {
         map.fitBounds(e.target.getBounds());
       })
       .addTo(map);
+
+    // Zusätzlich: Zeitpunkte aus GPX extrahieren und als Label anzeigen
+    fetch('track.gpx')
+      .then(response => response.text())
+      .then(gpxText => {
+        const parser = new DOMParser();
+        const gpxDoc = parser.parseFromString(gpxText, "application/xml");
+        const trkpts = gpxDoc.getElementsByTagName("trkpt");
+
+        for (let i = 0; i < trkpts.length; i++) {
+          const pt = trkpts[i];
+          const lat = parseFloat(pt.getAttribute("lat"));
+          const lon = parseFloat(pt.getAttribute("lon"));
+          const timeEl = pt.getElementsByTagName("time")[0];
+          const time = timeEl ? new Date(timeEl.textContent).toLocaleTimeString() : "Keine Zeit";
+
+          const label = L.marker([lat, lon], {
+            icon: L.divIcon({
+              className: 'gpx-label',
+              html: `<div style="font-size:10px; color:#000;">${time}</div>`,
+              iconSize: [60, 20],
+              iconAnchor: [30, 10],
+            })
+          }).addTo(map);
+        }
+      });
   });
 </script>
 
+
 </body>
 </html>
+
+
