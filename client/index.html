@@ -48,7 +48,30 @@
   const kml1 = omnivore.kml('../assets/genf-lepont.kml').addTo(map);
   const kml2 = omnivore.kml('../assets/lepont-saignelegier.kml').addTo(map);
   const kml3 = omnivore.kml('../assets/saignelegier-rombach.kml').addTo(map);
-  //const kml4 = omnivore.kml('../assets/etappenorte.kml').addTo(map);
+  const kml4 = omnivore.kml('../assets/etappenorte.kml').addTo(map)
+    .on('ready', function () {
+      kml4.eachLayer(function (layer) {
+        if (layer instanceof L.Marker) {
+
+          const latlng = layer.getLatLng();
+
+          const redCircle = L.circleMarker(latlng, {
+            radius: 6,
+            color: 'blue',
+            fillColor: 'blue',
+            fillOpacity: 1
+          }).addTo(map);
+
+          if (layer.getPopup()) {
+            redCircle.bindPopup(layer.getPopup().getContent());
+          }
+
+          map.removeLayer(layer);
+        }
+      });
+    })
+    .addTo(map);
+
 
   const group = L.featureGroup([kml1, kml2, kml3]);
   kml3.on('ready', () => {
