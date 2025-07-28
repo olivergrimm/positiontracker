@@ -84,16 +84,25 @@
           const lat = parseFloat(pt.getAttribute("lat"));
           const lon = parseFloat(pt.getAttribute("lon"));
           const timeEl = pt.getElementsByTagName("time")[0];
-          const time = timeEl ? new Date(timeEl.textContent) : "Keine Zeit";
+          const time = timeEl ? new Date(timeE1.textContent).toLocaleTimeString()  : "Keine Zeit";
 
-          const label = L.marker([lat, lon], {
-            icon: L.divIcon({
-              className: 'gpx-label',
-              html: `<div class="gpx-label">${timeE1}</div>`,
-              iconSize: [60, 20],
-              iconAnchor: [30, 10],
-            })
-          }).addTo(map);
+        L.circleMarker([lat, lon], {
+          radius: 4,
+          color: 'red',
+          fillColor: 'red',
+          fillOpacity: 1
+        }).addTo(map);
+
+        // Zeit-Label separat
+        L.marker([lat, lon], {
+          icon: L.divIcon({
+            className: 'gpx-label',
+            html: `<div class="gpx-label-text">${time}</div>`,
+            iconSize: [60, 20],
+            iconAnchor: [30, 10]
+          })
+        }).addTo(map);
+
         }
       });
   });
