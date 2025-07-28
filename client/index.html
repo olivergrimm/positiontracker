@@ -6,6 +6,19 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     #map { height: 100vh; }
+
+  .gpx-label {
+    font-size: 10px;
+    color: black;
+    background-color: white;
+    padding: 2px 4px;
+    border-radius: 4px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+</style>
+
   </style>
 </head>
 <body>
@@ -76,7 +89,7 @@
           const label = L.marker([lat, lon], {
             icon: L.divIcon({
               className: 'gpx-label',
-              html: `<div style="font-size:15px; color:red;">${time}</div>`,
+              html: `<div class="gpx-label">${time}</div>`,
               iconSize: [60, 20],
               iconAnchor: [30, 10],
             })
